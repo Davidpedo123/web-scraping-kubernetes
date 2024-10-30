@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-deployment
+  namespace: default
+spec:
+  replicas: 3  # Número de réplicas de tus pods
+  selector:
+    matchLabels:
+      app: api  # Debe coincidir con la etiqueta del selector en el Service
+  template:
+    metadata:
+      labels:
+        app: api  # Debe coincidir con la etiqueta del selector en el Service
+    spec:
+      containers:
+      - name: api
+        image: web-scraping:0.0.1  # Imagen del contenedor de la API
+        ports:
+        - containerPort: 8000  # Puerto en el contenedor donde la API escucha
+        env:
+          - name: HOST_REDIS
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: HOST_REDIS
+          - name: PORT_REDIS
+            valueFrom:
+              configMapKeyRef:
+                name: app-config
+                key: PORT_REDIS
+          - name: PASSWD_REDIS
+            valueFrom:
+              secretKeyRef:
+                name: redis-secret
+                key: PASSWD_REDIS
+      - name: redis
+        image: daviddevpiton/redis-web-scraping:0.0.1 # Imagen del contenedor de Redis
+        ports:
+        - containerPort: 6379
+
+      #- name: nginx
+      #  image: daviddevpiton/nginx-web-scraping:0.0.1
+      #  ports:
+      #    - containerPort: 80 # Puerto por defecto donde Redis escucha

@@ -1,0 +1,25 @@
+# Usa la imagen base de Debian
+FROM debian:12-slim
+
+# Instala las dependencias necesarias, incluyendo Redis
+RUN apt-get update && \
+    apt-get install -y \
+    redis-server \
+    && rm -rf /var/lib/apt/lists/*
+
+# Crea el grupo y el usuario redis si no existen
+RUN if ! getent group redis > /dev/null; then \
+    groupadd -r redis; \
+    useradd -r -g redis redis; \
+    fi
+
+# Crea los directorios necesarios y ajusta los permisos
+RUN mkdir -p /usr/local/etc/redis
+RUN mkdir -p /var/log/redis && \
+    chown redis:redis /var/log/redis
+
+# Copia el archivo de configuración de Redis
+COPY redis.conf /usr/local/etc/redis/redis.conf
+
+# Configura el contenedor para ejecutar Redis
+CMD ["redis-server", "/usr/local/etc/redis/redis.conf"]

@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+spec:
+  type: NodePort
+  selector:
+    app: api
+  ports:
+
+  - name: api-port
+    protocol: TCP
+    port: 8000  # Puerto externo para acceder a la API
+    targetPort: 8000
+    nodePort: 30800  # Puerto en el contenedor de la API
+  - name: redis-port
+    protocol: TCP
+    port: 6379  # Puerto externo para acceder a Redis
+    targetPort: 6379
+    nodePort: 30379
+  - name: nginx-port
+    protocol: TCP
+    port: 80  # Puerto externo para acceder a Redis
+    targetPort: 80
+    nodePort: 30080
+   # El puerto en el nodo a través del cual se puede acceder al servicio.
+    
