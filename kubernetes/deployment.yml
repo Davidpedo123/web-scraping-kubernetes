@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: web-scraping:0.0.1  # Imagen del contenedor de la API
+        image: daviddevpiton/web-scraping:0.0.3  # Imagen del contenedor de la API
         ports:
         - containerPort: 8000  # Puerto en el contenedor donde la API escucha
         env:
